@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true })) 
 app.use(express.json())
 
+app.use(express.static(process.cwd()+"/dist"))
 app.post('/api/foodtrucks', getFoodTrucks);
 
 app.listen(port, () => {
