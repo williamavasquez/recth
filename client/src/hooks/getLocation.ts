@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, useState } from 'react';
 
 interface Coordinates {
   latitude: number | null;
@@ -6,7 +6,11 @@ interface Coordinates {
   requestAddress: boolean;
 }
 
-const useGeoLocation = () => {
+interface Props {
+  isLoading: Dispatch<React.SetStateAction<boolean>>;
+}
+
+const useGeoLocation = ({ isLoading }: Props) => {
   const [coordinates, setCoordinates] = useState<Coordinates>({
     latitude: null,
     longitude: null,
@@ -14,6 +18,7 @@ const useGeoLocation = () => {
   });
 
   const getLocation = () => {
+    isLoading(true)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -22,6 +27,7 @@ const useGeoLocation = () => {
             longitude: position.coords.longitude,
             requestAddress: false
           });
+          isLoading(false)
         },
         () => {
           setCoordinates({
@@ -29,6 +35,7 @@ const useGeoLocation = () => {
             longitude: null,
             requestAddress: true
           });
+          isLoading(false)
         }
       );
     } else {
@@ -37,6 +44,7 @@ const useGeoLocation = () => {
         longitude: null,
         requestAddress: true
       });
+      isLoading(false)
     }
   };
 

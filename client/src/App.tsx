@@ -1,68 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import useGeoLocation from './hooks/getLocation';
+import  { FC, useState } from 'react';
 import { FoodTruck } from './types';
 import './App.css'
 
 import FoodTruckCards from './components/cards';
+import CustomerLocation from './components/customerLocation';
+import ResetButton from './components/resetButton';
 
-
-
-
-
-const baseURL = 'http://localhost:3000/api'
-const App: React.FC = () => {
-  const { coordinates, getLocation } = useGeoLocation();
-  const [customAddress, setCustomAddress] = useState<string>('');
+const App: FC = () => {
   const [trucks, setTrucks] = useState<FoodTruck[]>([])
-
-  useEffect(() => {
-    fetchTrucks()
-  }, [coordinates])
-
-  const fetchTrucks = async () => {
-    if ((coordinates.latitude && coordinates.longitude) || customAddress) {
-      let res = await fetch(`${baseURL}/foodtrucks`,
-        {
-          method: 'POST', 
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({coordinates:{
-            latitude: 37.75489622541768,
-            longitude: -122.38930488970668
-          }, customAddress, time: new Date().getHours()})
-        })
-      let data: FoodTruck[] = await res.json()
-      console.log(data)
-      setTrucks(data)
-    }
-  }
-
-  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomAddress(event.target.value);
-  };
 
   return (
     <div>
-      <h1>I'm Hungry NOW! </h1>
-
+      <h1 className='mb-5'>I'm Hungry NOW! </h1>
       {
-        !coordinates.requestAddress
-          ? <button className="m-3 bg-cyan-600" onClick={getLocation}>Find Food Trucks Open Now</button>
-          : <div>
-            <input
-              type="text"
-              placeholder="Enter your address"
-              value={customAddress}
-              onChange={handleAddressChange}
-            />
-            <button onClick={fetchTrucks}>Submit</button>
-          </div>
+        trucks.length == 0 
+        ? <CustomerLocation updateTrucks={setTrucks} />
+        : <ResetButton reset={setTrucks}/>  
       }
 
-        {
-          trucks.map((item)=> <FoodTruckCards {...item}/>)
-        }
+      {
+        trucks.map((item, i) => <FoodTruckCards key={i} {...item} />)
+      }
+
     </div>
   );
 };

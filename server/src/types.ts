@@ -1,3 +1,8 @@
+export interface Coordinates {
+  latitude: number,
+  longitude: number
+}
+
 export interface FoodTruck {
   dayorder: string;
   dayofweekstr: string;
@@ -22,8 +27,8 @@ export interface FoodTruck {
   latitude: string;
   longitude: string;
   location_2: {
-      latitude: string;
-      longitude: string;
-      human_address: string;
+    latitude: string;
+    longitude: string;
+    human_address: string;
   };
 }
