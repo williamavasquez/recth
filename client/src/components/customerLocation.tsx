@@ -29,9 +29,7 @@ const CustomerLocation: React.FC<Props> = ({ updateTrucks }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            coordinates: {
-              latitude: "37.76037226749644", longitude: "-122.4125109516592"
-            }, customAddress, time: new Date().getHours()
+            coordinates, customAddress, time: new Date().getHours()
           })
         })
       let data: FoodTruck[] = await res.json()
